@@ -1,0 +1,36 @@
+{% extends 'locations/index.html' %} {% load static%} {% block content %}
+<loc-country></loc-country>
+{% endblock %}{% block extrascript %}
+<script>
+  Vue.component("loc-country", {
+    props: ["tableData"],
+    template: `
+      <v-data-table
+        :headers="headers"
+        :items="tableData"
+        class="elevation-1"></v-data-table>
+    `,
+    data() {
+      return {
+        // tableData: null,
+        loading: true,
+        errored: false,
+        headers: [
+          { text: "Country", value: "name" },
+          { text: "ISO-2", value: "iso2" }
+        ]
+      };
+    },
+    created() {
+      axios
+        .get("/api/country/")
+        .then(res => (this.tableData = res.data.results))
+        .catch(error => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => (this.loading = false));
+    }
+  });
+</script>
+{% endblock %}

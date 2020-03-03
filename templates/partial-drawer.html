@@ -1,0 +1,73 @@
+{% load i18n static %}<v-navigation-drawer
+  v-model="drawer"
+  :expand-on-hover="expandOnHover"
+  :mini-variant="miniVariant"
+  :right="right"
+  :src="bg"
+  absolute
+  dark
+  app
+>
+  <v-list dense nav class="py-0">
+    <v-list-item two-line :class="miniVariant && 'px-0'">
+      <v-list-item-avatar>
+        <img src="https://randomuser.me/api/portraits/men/34.jpg" />
+      </v-list-item-avatar>
+
+      <v-list-item-content>
+        <v-list-item-title>Locations</v-list-item-title>
+        <v-list-item-subtitle>Menu</v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
+
+    <v-divider></v-divider>
+
+    <template v-for="item in drawerItems">
+      <v-list-group
+        v-if="item.children"
+        :key="item.indigo"
+        :prepend-icon="item.icon"
+        :append-icon="item['icon-alt']"
+      >
+        <template v-slot:activator>
+          <v-list-item-content>
+            <v-list-item-title>
+              [[ item.title ]]
+            </v-list-item-title>
+          </v-list-item-content>
+        </template>
+        <v-list-item
+          v-for="(child, i) in item.children"
+          :key="i"
+          @click="child.to"
+          :href="child.to"
+          link
+        >
+          <v-list-item-action v-if="child.icon">
+            <v-icon>[[ child.icon ]]</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>[[ child.text ]]</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-group>
+
+      <v-list-item v-else :key="item.id" :href="item.to" link>
+        <v-list-item-action>
+          <v-icon>[[ item.icon ]]</v-icon>
+        </v-list-item-action>
+        <v-list-item-content>
+          <v-list-item-title>
+            [[ item.title ]]
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </template>
+  </v-list>
+
+  <template v-slot:append>
+    <div class="pa-2">
+      <v-btn block>Logout</v-btn>
+    </div>
+  </template>
+</v-navigation-drawer>

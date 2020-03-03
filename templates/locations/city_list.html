@@ -1,0 +1,39 @@
+{% extends 'locations/index.html' %}{% load static %} {% block content %}
+<loc-city></loc-city>
+{% endblock %}{% block extrascript %}
+<script>
+  Vue.component("loc-city", {
+    props: ["tableData"],
+    template: `
+      <v-data-table
+        :headers="headers"
+        :items="tableData"
+        class="elevation-1"></v-data-table>
+    `,
+    data() {
+      return {
+        tableData: null,
+        loading: true,
+        errored: false,
+        headers: [
+          { text: "City", value: "name" },
+          { text: "City ID", value: "cid" },
+          { text: "Latitude", value: "latitude" },
+          { text: "Longitude", value: "longitude" },
+          { text: "Country", value: "country_name" }
+        ]
+      };
+    },
+    created() {
+      axios
+        .get("/api/city/")
+        .then(res => (this.tableData = res.data.results))
+        .catch(error => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => (this.loading = false));
+    }
+  });
+</script>
+{% endblock %}

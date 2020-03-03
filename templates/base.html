@@ -1,0 +1,118 @@
+{% load i18n static %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
+      rel="stylesheet"
+    />
+    {% block extrastyle %}{% endblock %}
+    {% block responsive %}
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+    {% endblock %}
+    {% block extrahead %}{% endblock %}
+  </head>
+  {% load i18n %}
+  <body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
+    data-admin-utc-offset="{% now "Z" %}">
+    <div id="app">
+      <!-- App.vue -->
+
+      <v-app>
+
+        {% include 'partial-bar.html' %}
+
+        {% include 'partial-drawer.html' %}
+
+
+
+        <!-- Sizes your content based upon application components -->
+        <v-content>
+
+          <!-- Provides the application the proper gutter -->
+          <v-container fluid>
+            <!-- <section v-if="errored">
+              <p>{% trans 'There is a problem with the data' %}</p>
+            </section>
+            <section v-else>
+              <div v-if="loading">{% trans 'Loading...' %}</div>
+              <div v-else>
+                block content
+              </div>
+            </section> -->
+
+            <section>{% block content %}{% endblock %}</section>
+            <!-- If using vue-router -->
+            <!-- <router-view></router-view> -->
+          </v-container>
+        </v-content>
+
+        {% include 'partial-footer.html' %}
+
+      </v-app>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuex"></script>
+    <!-- <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    {% block extrascript %}{% endblock %}
+    <script type="module">
+      var vm = new Vue({
+        delimiters: ["[[", "]]"],
+        el: "#app",
+        // router: router,
+        vuetify: new Vuetify(),
+        data: {
+          // drawer related
+          drawer: true,
+          drawerItemGroup: true,
+          drawerItems: [
+            {
+              id: 100,
+              title: "{% trans 'Home' %}",
+              icon: "mdi-home-city",
+              to: "{% url 'home' %}"
+            },
+            {
+              id: 200,
+              title: "{% trans 'Locations' %}",
+              icon: "mdi-image",
+              "icon-alt": "mdi-chevron-down",
+              children: [
+                {
+                  text: "Countries",
+                  to: "{% url 'country_list' %}"
+                },
+                {
+                  text: "Cities",
+                  to: "{% url 'city_list' %}"
+                }
+              ]
+            },
+          ],
+          color: "indigo",
+          right: true,
+          miniVariant: false,
+          expandOnHover: false,
+          background: false,
+          bg: null
+        },
+      });
+    </script>
+  </body>
+</html>
