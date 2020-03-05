@@ -5,16 +5,13 @@
     <title>{% block title %}{% endblock %}</title>
     <link
       href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
-      rel="stylesheet"
-    />
+      rel="stylesheet">
     <link
       href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css"
-      rel="stylesheet"
-    />
+      rel="stylesheet">
     <link
       href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
-      rel="stylesheet"
-    />
+      rel="stylesheet">
     {% block extrastyle %}{% endblock %}
     {% block responsive %}
     <meta
@@ -24,36 +21,23 @@
     {% endblock %}
     {% block extrahead %}{% endblock %}
   </head>
-  {% load i18n %}
   <body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
     data-admin-utc-offset="{% now "Z" %}">
     <div id="app">
-      <!-- App.vue -->
 
+      <!-- App.vue -->
       <v-app>
 
         {% include 'partial-bar.html' %}
 
         {% include 'partial-drawer.html' %}
 
-
-
         <!-- Sizes your content based upon application components -->
         <v-content>
 
           <!-- Provides the application the proper gutter -->
           <v-container fluid>
-            <!-- <section v-if="errored">
-              <p>{% trans 'There is a problem with the data' %}</p>
-            </section>
-            <section v-else>
-              <div v-if="loading">{% trans 'Loading...' %}</div>
-              <div v-else>
-                block content
-              </div>
-            </section> -->
-
-            <section>{% block content %}{% endblock %}</section>
+            {% block content %}{% endblock %}
             <!-- If using vue-router -->
             <!-- <router-view></router-view> -->
           </v-container>
@@ -65,11 +49,16 @@
 
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
-    <script src="https://unpkg.com/vuex"></script>
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <!-- production version, optimized for size and speed -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+
+    <!-- <script src="https://unpkg.com/vuex"></script> -->
     <!-- <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script> -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     {% block extrascript %}{% endblock %}
     <script type="module">
       var vm = new Vue({

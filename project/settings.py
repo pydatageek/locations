@@ -141,3 +141,6 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 20000
 }
+
+# needed for vue related post, put, patch and delete
+# CSRF_COOKIE_NAME = "XSRF-TOKEN"

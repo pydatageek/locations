@@ -1,38 +1,94 @@
-{% extends 'locations/index.html' %}{% load static %} {% block content %}
+{% extends 'locations/index.html' %}{% load static i18n %} {% block content %}
 <loc-city></loc-city>
 {% endblock %}{% block extrascript %}
 <script>
   Vue.component("loc-city", {
-    props: ["tableData"],
     template: `
       <v-data-table
-        :headers="headers"
-        :items="tableData"
-        class="elevation-1"></v-data-table>
+        :search="search" :headers="headers" :items="tableData"
+        :loading="loading" loading-text="{% trans 'Loading...' %}"
+        no-data-text="{% trans 'No data available' %}"
+        class="elevation-1">
+        <template v-slot:top>
+          <v-toolbar flat color="white">
+            <v-toolbar-title>My CRUD</v-toolbar-title>
+            <v-divider class="mx-4" inset vertical></v-divider>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="primary" dark class="mb-2"
+              href="{% url 'city_create' %}"
+            >{% trans 'Add' %}</v-btn>
+          </v-toolbar>
+          <v-text-field
+            v-model="search" label="{% trans 'Search' %}"
+            prepend-inner-icon="mdi-magnify"
+            clearable clear-icon="mdi-close-circle">
+          </v-text-field>
+        </template>
+        <template v-slot:item.action="{ item }">
+          <v-btn
+            color="transparent" href="{% url 'city_create' %}"
+            small ripple depressed>
+            <v-icon small @click="showItem(item)" color="indigo">
+              mdi-information-outline
+            </v-icon>
+          </v-btn>
+          <v-btn small ripple depressed color="transparent" href="{% url 'city_create' %}">
+            <v-icon small @click="editItem(item)" color="indigo">
+              mdi-pencil
+            </v-icon>
+          </v-btn>
+          <v-btn small ripple depressed color="transparent" href="{% url 'city_create' %}">
+            <v-icon small @click="deleteItem(item)" color="red darken-2">
+              mdi-delete
+            </v-icon>
+          </v-btn>
+        </template>
+      </v-data-table>
     `,
     data() {
       return {
-        tableData: null,
+        tableData: [],
         loading: true,
-        errored: false,
+        search: "",
         headers: [
           { text: "City", value: "name" },
           { text: "City ID", value: "cid" },
           { text: "Latitude", value: "latitude" },
           { text: "Longitude", value: "longitude" },
-          { text: "Country", value: "country_name" }
-        ]
+          { text: "Country", value: "country_name" },
+          { text: "Actions", value: "action", sortable: false }
+        ],
+        editedIndex: -1,
+        editedItem: {
+          name: "",
+          cid: 0,
+          latitude: 0,
+          longitude: 0,
+          country_name: ""
+        },
+        defaultItem: {
+          name: "",
+          cid: 0,
+          latitude: 0,
+          longitude: 0,
+          country_name: ""
+        }
       };
     },
+    methods: {
+      initialize() {
+        axios
+          .get("/api/city/")
+          .then(res => (this.tableData = res.data.results))
+          .catch(error => {
+            console.log(error);
+          })
+          .finally(() => (this.loading = false));
+      }
+    },
     created() {
-      axios
-        .get("/api/city/")
-        .then(res => (this.tableData = res.data.results))
-        .catch(error => {
-          console.log(error);
-          this.errored = true;
-        })
-        .finally(() => (this.loading = false));
+      this.initialize();
     }
   });
 </script>

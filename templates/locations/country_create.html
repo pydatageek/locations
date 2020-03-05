@@ -1,0 +1,52 @@
+{% extends 'locations/index.html' %} {% load static i18n %} {% block content %}
+<loc-country-create></loc-country-create>
+{% endblock %}{% block extrascript %}
+<script>
+  Vue.component("loc-country-create", {
+    template: `
+      <v-form method="post">
+      {% csrf_token %}
+        <v-container>
+          <v-text-field
+            v-model="name"
+            label="Country name"
+            required
+          ></v-text-field>
+
+          <v-text-field
+            v-model="iso2"
+            label="ISO-2 Code"
+            required
+          ></v-text-field>
+
+          <v-btn class="mr-4" @click.prevent="submit">submit</v-btn>
+        </v-container>
+    </v-form>
+    `,
+    data() {
+      return {
+        name: "",
+        iso2: ""
+      };
+    },
+    methods: {
+      submit() {
+        axios.defaults.xsrfCookieName = "csrftoken";
+        axios.defaults.xsrfHeaderName = "X-CSRFToken";
+        axios.defaults.withCredentials = true;
+        axios
+          .post("/api/country/", {
+            name: this.name,
+            iso2: this.iso2
+          })
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    }
+  });
+</script>
+{% endblock %}

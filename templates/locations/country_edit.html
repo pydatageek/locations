@@ -1,0 +1,49 @@
+{% extends 'locations/index.html' %} {% load static i18n %} {% block content %}
+<loc-country-edit></loc-country-edit>
+{% endblock %}{% block extrascript %}
+<script>
+  Vue.component("loc-country-edit", {
+    template: `
+      <v-form v-model="valid">
+        <v-container>
+          <v-text-field
+            v-model="name"
+            :rules="nameRules"
+            :counter="10"
+            label="Country name"
+            required
+          ></v-text-field>
+
+          <v-text-field
+            v-model="iso2"
+            :rules="nameRules"
+            :counter="10"
+            label="ISO-2 Code"
+            required
+          ></v-text-field>
+
+          <v-btn class="mr-4" @click="submit">submit</v-btn>
+        </v-container>
+    </v-form>
+    `,
+    data() {
+      return {
+        name: "",
+        iso2: ""
+      };
+    },
+    methods: {
+      submit() {
+        axios
+          .post("/api/country/", {
+            name: this.name,
+            iso2: this.iso2
+          })
+          .then(res => {
+            console.log(res);
+          });
+      }
+    }
+  });
+</script>
+{% endblock %}
